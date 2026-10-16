@@ -62,14 +62,21 @@ async function gt(path) {
   return v;
 }
 
-// GeckoTerminal has no art for some newer coins; DexScreener often does
-async function dexArt(address) {
+// GeckoTerminal's names and art lag behind (IMD still shows there as "Vibe Coins"); DexScreener's are current
+async function dexToken(address) {
   try {
     const r = await fetch(`https://api.dexscreener.com/latest/dex/tokens/${address}`);
-    const pair = ((await r.json()).pairs || []).find((p) => p.info?.imageUrl && p.baseToken?.address?.toLowerCase() === address.toLowerCase());
-    return pair ? pair.info.imageUrl.replace(/width=\d+&height=\d+/, "width=128&height=128") : null;
+    const pair = ((await r.json()).pairs || [])
+      .filter((p) => p.baseToken?.address?.toLowerCase() === address.toLowerCase())
+      .sort((a, b) => (b.liquidity?.usd || 0) - (a.liquidity?.usd || 0))[0];
+    if (!pair) return null;
+    return { name: pair.baseToken.name, symbol: pair.baseToken.symbol, image: pair.info?.imageUrl?.replace(/width=\d+&height=\d+/, "width=128&height=128") || null };
   } catch { return null; }
 }
+
+// Ether trades as WETH, and its deepest pools are on Ethereum, not wherever an "ETH" ticker ranks first
+const WETH = "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2";
+const ALIASES = { eth: WETH };
 
 async function findCoin(want) {
   const isAddress = /^0x[0-9a-fA-F]{40}$/.test(want) || /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(want);
@@ -80,12 +87,15 @@ async function findCoin(want) {
     .filter((p) => p.token && (isAddress ? p.token.address.toLowerCase() === want.toLowerCase() : p.token.symbol.toLowerCase() === want.toLowerCase()))
     .sort((a, b) => b.liquidity - a.liquidity)[0];
   if (!pool) throw fail(404, isAddress ? "No trading pool for that address." : `No coin with the ticker ${want.toUpperCase()}.`);
-  const image = pool.token.image_url && !/missing/.test(pool.token.image_url) ? pool.token.image_url : await dexArt(pool.token.address);
-  return { name: pool.token.name, symbol: pool.token.symbol, image, network: pool.network, pool: pool.address, candles: {} };
+  const dex = await dexToken(pool.token.address);
+  const art = pool.token.image_url && !/missing/.test(pool.token.image_url) ? pool.token.image_url : dex?.image ?? null;
+  const [name, symbol] = pool.token.address.toLowerCase() === WETH ? ["Ether", "ETH"] : [dex?.name || pool.token.name, dex?.symbol || pool.token.symbol];
+  return { name, symbol, image: art, network: pool.network, pool: pool.address, candles: {} };
 }
 
 export async function coin(q, range) {
-  const want = String(q).trim().replace(/^\$/, "");
+  const typed = String(q).trim().replace(/^\$/, "");
+  const want = ALIASES[typed.toLowerCase()] || typed;
   if (!want) throw fail(400, "Paste a coin address or a ticker.");
   if (!HISTORY[range]) throw fail(400, "Unknown range.");
   const key = want.toLowerCase();
