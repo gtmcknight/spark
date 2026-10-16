@@ -1,6 +1,6 @@
 # line in bio
 
-Sparklines made of text, for your X bio or a post. Make one at **[spark.rhps.fun](https://spark.rhps.fun)**, or let this repo redraw it in your bio twice a day.
+Sparklines made of text, for your X bio or a post: GitHub activity, AI token usage, a coin's price, or your own numbers. Make one at **[spark.rhps.fun](https://spark.rhps.fun)**, or let this repo redraw it in your bio twice a day.
 
 ```
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣾⣷⡀⠀⣤⣤⡀⠀⠀⢀⣀⠀⠀⠀ 10/15 8pm
@@ -25,8 +25,10 @@ X bills each update to your developer account. Twice a day costs a few cents. Gi
 | Field | What it does |
 |---|---|
 | `github` | Your GitHub handle. Charts your public contribution graph. |
-| `coin` | A ticker like `PEPE` or a contract address. Used when `github` is empty. |
-| `range` | GitHub: `14d`, `30d`, `90d` or `1y`. Coins: `1d`, `7d`, `30d` or `90d`. |
+| `tokens` | A [tokenmaxxing](https://tokenmaxxing.sh) username. Charts your daily AI token usage. |
+| `coin` | A ticker like `PEPE` or a contract address. |
+| `numbers` | Your own list, like `[3, 5, 4, 8, 13]`. Only the first source that's filled in is used. |
+| `range` | GitHub and tokens: `14d`, `30d`, `90d` or `1y`. Coins: `1d`, `7d`, `30d` or `90d`. Numbers ignore it. |
 | `style` | `bars`, `line`, `wave`, `negative` or `blocks`. |
 | `width` | Characters across, 6 to 48. Past 33, the chart wraps on phones. |
 | `rows` | Lines tall, 1 to 4. Blocks are always one line. |
@@ -49,6 +51,7 @@ node bio.mjs --live   # posts it; needs the four X_ keys in your environment
 ## Where the numbers come from
 
 - **GitHub:** your public contribution graph, so it counts what GitHub counts: commits that reach a default branch, plus pull requests, issues and reviews. Private work shows only if your profile shares private contributions.
+- **Tokens:** [tokenmaxxing](https://tokenmaxxing.sh)'s public API, summed across models per day.
 - **Coins:** [GeckoTerminal](https://www.geckoterminal.com)'s free API, from the coin's deepest trading pool. Coin art comes from [DexScreener](https://dexscreener.com) when GeckoTerminal has none.
 
 Your X keys never leave your repo's secrets.

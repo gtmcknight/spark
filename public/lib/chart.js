@@ -2,8 +2,11 @@
 
 export const STYLES = ["bars", "line", "wave", "negative", "blocks"];
 export const WIDTH = { min: 6, max: 48, start: 24 }; // 48 is the widest that fits a desktop bio or post without wrapping
+const DAYS = [["14d", "14D", 14], ["30d", "30D", 30], ["90d", "90D", 90], ["1y", "1Y", 365]];
 export const RANGES = {
-  github: [["14d", "14D", 14], ["30d", "30D", 30], ["90d", "90D", 90], ["1y", "1Y", 365]],
+  github: DAYS,
+  tokens: DAYS,
+  numbers: [["all", "", 0]],
   coin: [["1d", "1D", 1], ["7d", "7D", 7], ["30d", "30D", 30], ["90d", "90D", 90]],
 };
 export const BLOCKS = "▁▂▃▄▅▆▇█";
@@ -14,8 +17,18 @@ const blur = (v, s) => v.map((_, i) => { let a = 0, w = 0; v.forEach((x, j) => {
 
 // One value per column, plus the total the stat line reports. smooth blends neighbours; sharp keeps every day or price as is.
 function series(data, range, cols, smooth = true) {
-  if (data.src === "github") {
-    const n = RANGES.github.find(([k]) => k === range)[2];
+  if (data.src === "numbers") {
+    const v = data.values, n = v.length;
+    const values = Array.from({ length: cols }, (_, x) => {
+      const at = ((x + 0.5) / cols) * (n - 1);
+      if (!smooth) return v[Math.round(at)];
+      const i = Math.floor(at), f = at - i;
+      return i >= n - 1 ? v[n - 1] : v[i] + (v[i + 1] - v[i]) * f;
+    });
+    return { values: smooth ? blur(values, 0.6) : values };
+  }
+  if (data.src === "github" || data.src === "tokens") {
+    const n = DAYS.find(([k]) => k === range)[2];
     const days = data.days.slice(0, -1).slice(-n).map((d) => d[1]); // today is still filling up, so it's left out
     const total = days.reduce((a, b) => a + b, 0);
     if (!smooth) return { values: Array.from({ length: cols }, (_, x) => days[Math.min(days.length - 1, Math.floor(((x + 0.5) / cols) * days.length))]), total };
@@ -39,9 +52,17 @@ function series(data, range, cols, smooth = true) {
   return { values: smooth ? blur(values, 0.6) : values };
 }
 
+const compact = (n) => (n >= 1e9 ? `${(n / 1e9).toFixed(2)}B` : n >= 1e6 ? `${(n / 1e6).toFixed(1)}M` : n >= 1e3 ? `${(n / 1e3).toFixed(1)}K` : `${Math.round(n)}`);
+
 function statLine(data, range, total) {
+  if (data.src === "numbers") {
+    const first = data.values[0], last = data.values.at(-1);
+    const change = first ? ((last - first) / Math.abs(first)) * 100 : null;
+    return `${last.toLocaleString("en-US", { maximumFractionDigits: 2 })}${change === null ? "" : ` (${change >= 0 ? "+" : "-"}${Math.abs(change).toFixed(0)}%)`}`;
+  }
   const label = RANGES[data.src].find(([k]) => k === range)[1];
   if (data.src === "github") return `${total.toLocaleString("en-US")} contributions in ${label}`;
+  if (data.src === "tokens") return `${compact(total)} tokens in ${label}`;
   const pct = data.change * 100;
   return `$${data.symbol.toUpperCase()} ${pct >= 0 ? "+" : "-"}${Math.abs(pct).toFixed(1)}% in ${label}`;
 }

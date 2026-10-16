@@ -191,22 +191,36 @@
   .steps li { counter-increment: step; display: grid; grid-template-columns: 28px minmax(0, 1fr); font-size: 16px; line-height: 24px; }
   .steps li::before { content: counter(step); grid-row: span 2; color: var(--ink-3); font: 500 12px/24px var(--mono); }
   .steps li > * { grid-column: 2; }
+  .how-body h3 { margin: 20px 0 0; color: var(--ink-2); font-size: 14px; font-weight: 600; }
+  .how-body h3 + .steps { margin-top: 12px; }
+  .steps b { font-weight: 600; }
+  .keys-map { margin-top: 12px; border: 1px solid var(--rule); border-radius: 12px; }
+  .keys-map > div { display: grid; grid-template-columns: 172px minmax(0, 1fr); align-items: center; gap: 12px; padding: 6px 12px; }
+  .keys-map > div + div { border-top: 1px solid var(--rule); }
+  .keys-map span { color: var(--ink-2); font-size: 14px; }
+  .secret { justify-self: start; padding: 4px 8px; border: 0; border-radius: 8px; background: var(--fill); color: var(--ink); font: 500 13px/20px var(--mono); transition: transform 0.15s var(--ease); }
+  .secret:active { transform: scale(0.97); }
+  .steps .aside { margin-top: 10px; color: var(--ink-3); font-size: 14px; line-height: 20px; }
   .steps code { font: 500 14px/24px var(--mono); }
   .steps a { text-decoration-color: color-mix(in srgb, currentColor 35%, transparent); text-underline-offset: 3px; }
   .config { position: relative; margin-top: 12px; }
   .config pre { margin: 0; padding: 16px; overflow-x: auto; border-radius: 12px; background: var(--fill); color: var(--ink-2); font: 500 12px/18px var(--mono); }
   .config::after { content: ""; position: absolute; inset: -4px; border-radius: 16px; box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 70%, transparent); opacity: 0; pointer-events: none; }
-  .config.flash::after { animation: flash 1.3s var(--ease); } /* says "this is where Auto-update brought you" */
+  .config.flash::after { animation: flash 1.3s var(--ease); } /* says "this is where the steps are" */
   @keyframes flash { 25% { opacity: 1; } 100% { opacity: 0; } }
   ::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
   .config .quiet { position: absolute; top: 8px; right: 8px; height: 32px; padding: 0 12px; background: var(--bg); font-size: 12px; }
   .live .fine { margin: 20px 0 0; font-size: 14px; line-height: 20px; color: var(--ink-3); }
 
   @media (max-width: 560px) {
+    .field { flex-wrap: wrap; border-radius: 26px; }
+    .field .seg { display: flex; width: 100%; }
+    .field .seg button { flex: 1; padding: 0 4px; }
     .card { padding: 16px; }
     .live-bar { grid-template-columns: minmax(0, 1fr); gap: 16px; padding: 16px; }
     .live-copy .quiet { width: 100%; height: 46px; }
     .how-body { padding: 4px 16px 16px; }
+    .keys-map > div { grid-template-columns: minmax(0, 1fr); gap: 2px; padding: 8px 12px; }
     .setting { grid-template-columns: minmax(0, 1fr); gap: 8px; padding: 12px 16px; }
     .setting .seg button { height: 40px; padding: 0 4px; }
     .slider { height: 46px; }
@@ -239,12 +253,12 @@
     <section class="tool" aria-label="Make a chart">
       <form class="field" id="form">
         <div class="seg" id="source" role="group" aria-label="Source">
-          <button type="button" data-v="github">GitHub</button><button type="button" data-v="coin">Coin</button><span class="thumb"></span>
+          <button type="button" data-v="github">GitHub</button><button type="button" data-v="tokens">Tokens</button><button type="button" data-v="coin">Coin</button><button type="button" data-v="numbers">Numbers</button><span class="thumb"></span>
         </div>
         <input id="q" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go" aria-label="GitHub handle">
         <button class="go" type="submit" aria-label="Make the chart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
       </form>
-      <p class="try">Try <button type="button" data-src="github" data-q="gtmcknight">gtmcknight</button><i>·</i><button type="button" data-src="github" data-q="surfer77">surfer77</button><i>·</i><button type="button" data-src="coin" data-q="0xD34a99Bc0f67aE1bbd63C660e6d0b0dd03E263B7">$IMD</button><i>·</i><button type="button" data-src="coin" data-q="0xa0df17b5ac76ababa36e1450e2cbcd18a620c845">$FWA</button><i>·</i><button type="button" data-src="coin" data-q="ETH">$ETH</button></p>
+      <p class="try">Try <button type="button" data-src="github" data-q="gtmcknight">gtmcknight</button><i>·</i><button type="button" data-src="github" data-q="surfer77">surfer77</button><i>·</i><button type="button" data-src="coin" data-q="0xD34a99Bc0f67aE1bbd63C660e6d0b0dd03E263B7">$IMD</button><i>·</i><button type="button" data-src="coin" data-q="0xa0df17b5ac76ababa36e1450e2cbcd18a620c845">$FWA</button><i>·</i><button type="button" data-src="coin" data-q="ETH">$ETH</button><i>·</i><button type="button" data-src="tokens" data-q="gtmcknight">gtmcknight's tokens</button></p>
 
       <div class="frame">
         <article class="card">
@@ -305,52 +319,70 @@ the line spikes when i'm close</pre>
         </div>
       </div>
       <div class="how" id="how-steps"><div><div class="how-body">
+        <h3>On X</h3>
         <ol class="steps">
-          <li><span>Fork <a href="https://github.com/gtmcknight/line-in-bio">gtmcknight/line-in-bio</a>, then turn on Actions in your fork.</span></li>
-          <li><span>In the <a href="https://console.x.com">X Developer Console</a>, make an app with Read and write access and generate its keys.</span></li>
-          <li><span>Add the four keys to your fork as Actions secrets: <code>X_API_KEY</code>, <code>X_API_SECRET</code>, <code>X_ACCESS_TOKEN</code>, <code>X_ACCESS_SECRET</code>.</span></li>
-          <li><span>Replace <code>config.json</code> in your fork with this. It draws the chart above.</span>
-            <div class="config"><pre id="config"></pre><button class="quiet" id="copy-config" type="button">Copy</button></div></li>
-          <li><span>Run it once from your fork's Actions tab. After that it updates twice a day.</span></li>
+          <li><span>Open the <a href="https://console.x.com">X Developer Console</a> and create an app.</span></li>
+          <li><span>In the app, open <b>User authentication settings</b>. Set permissions to <b>Read and write</b>, type to <b>Web App, Automated App or Bot</b>, and put <code>https://spark.rhps.fun</code> in both Callback URI and Website URL. Save.</span></li>
+          <li><span>Open <b>Keys and tokens</b>. Under <b>OAuth 1.0 Keys</b>, regenerate the Consumer Key, then generate the Access Token. Each shows its secret once, so keep the tab open.</span>
+            <div class="keys-map" role="table" aria-label="Which X key goes in which secret">
+              <div role="row"><button type="button" class="secret" role="cell">X_API_KEY</button><span role="cell">Consumer Key, the key</span></div>
+              <div role="row"><button type="button" class="secret" role="cell">X_API_SECRET</button><span role="cell">Consumer Key, the secret</span></div>
+              <div role="row"><button type="button" class="secret" role="cell">X_ACCESS_TOKEN</button><span role="cell">Access Token, the token</span></div>
+              <div role="row"><button type="button" class="secret" role="cell">X_ACCESS_SECRET</button><span role="cell">Access Token, the secret</span></div>
+            </div>
+            <span class="aside">Skip OAuth 2.0 (Client ID and Client Secret); this doesn't use them. The Access Token should say <b>Read and write</b>. If it says Read, you made it before step 2, so regenerate it.</span></li>
         </ol>
-        <p class="fine">X bills each update to your developer account. Twice a day costs a few cents.</p>
+        <h3>On GitHub</h3>
+        <ol class="steps">
+          <li><span><a href="https://github.com/gtmcknight/line-in-bio/fork">Fork gtmcknight/line-in-bio</a>. In your fork, open <b>Actions</b> and click <b>I understand my workflows, go ahead and enable them</b>.</span></li>
+          <li><span>In your fork, go to <b>Settings → Secrets and variables → Actions → New repository secret</b> and add all four, named exactly as in the table.</span></li>
+          <li><span>Open <code>config.json</code> in your fork, click the pencil, replace everything with this, and commit. It draws the chart above.</span>
+            <div class="config"><pre id="config"></pre><button class="quiet" id="copy-config" type="button">Copy</button></div></li>
+          <li><span>Go to <b>Actions → Update bio → Run workflow</b>. Your bio changes within a minute, then twice a day.</span></li>
+        </ol>
+        <p class="fine">X bills each update to your developer account, so keep a little credit under Billing. Twice a day costs a few cents.</p>
       </div></div></div>
     </section>
   </main>
 
-  <footer>GitHub charts use public contribution graphs. Coin prices come from <a href="https://www.geckoterminal.com">GeckoTerminal</a>.</footer>
+  <footer>GitHub charts use public contribution graphs. Tokens come from <a href="https://tokenmaxxing.sh">tokenmaxxing</a>. Coin prices come from <a href="https://www.geckoterminal.com">GeckoTerminal</a>.</footer>
 </div>
 
 <script type="module">
 import { STYLES, RANGES, WIDTH, BLOCKS, draw as drawValues, render, measure } from "/lib/chart.js";
-import { coin, useProxy } from "/lib/sources.js";
+import { coin, numbers, useProxy } from "/lib/sources.js";
 useProxy("/api/gt");
 
 const $ = (s) => document.querySelector(s);
 const root = document.documentElement;
 
 const PHONE = 33; // characters across an X bio on a small phone before it wraps
-const DEFAULT_RANGE = { github: "14d", coin: "7d" };
+const DEFAULT_RANGE = { github: "14d", tokens: "14d", coin: "7d", numbers: "all" };
+const PARAM = { github: "gh", tokens: "tk", coin: "coin", numbers: "nums" }; // the URL key for each source
+const PLACEHOLDER = { github: "GitHub handle", tokens: "tokenmaxxing username", coin: "Coin address or ticker", numbers: "Your numbers, like 3, 5, 4, 8, 13" };
+const ASK = { github: "Type a GitHub handle.", tokens: "Type a tokenmaxxing username.", coin: "Paste a coin address or a ticker.", numbers: "Paste some numbers." };
 const BIT = [[0x01, 0x02, 0x04, 0x40], [0x08, 0x10, 0x20, 0x80]]; // braille dots, for the headline's spark
 const BLANK = "⠀";
 
 /* ---------------------------------------------------------------- state, from the URL */
 const params = new URLSearchParams(location.search);
 const state = {
-  src: params.has("coin") ? "coin" : "github",
-  q: { github: params.get("gh") ?? (params.has("coin") ? "" : "gtmcknight"), coin: params.get("coin") ?? "" },
+  src: Object.keys(PARAM).find((k) => k !== "github" && params.has(PARAM[k])) || "github",
+  q: { github: "", tokens: "", coin: "", numbers: "" },
   style: STYLES.includes(params.get("style")) ? params.get("style") : "bars",
   w: Math.min(WIDTH.max, Math.max(WIDTH.min, Math.round(+params.get("w") || WIDTH.start))),
   rows: [1, 2, 3, 4].includes(+params.get("rows")) ? +params.get("rows") : 2,
   smooth: params.get("sharp") !== "1",
   range: null,
 };
+for (const k in PARAM) state.q[k] = params.get(PARAM[k]) ?? "";
+if (state.src === "github" && !params.has("gh")) state.q.github = "gtmcknight";
 state.range = RANGES[state.src].some(([k]) => k === params.get("range")) ? params.get("range") : DEFAULT_RANGE[state.src];
 let data = null; // the last answer from the API, for the current source
 
 function syncUrl() {
   const p = new URLSearchParams();
-  p.set(state.src === "github" ? "gh" : "coin", state.q[state.src]);
+  p.set(PARAM[state.src], state.q[state.src]);
   if (state.range !== DEFAULT_RANGE[state.src]) p.set("range", state.range);
   if (state.style !== "bars") p.set("style", state.style);
   if (state.w !== WIDTH.start) p.set("w", state.w);
@@ -365,7 +397,9 @@ function syncUrl() {
 function configText() {
   return JSON.stringify({
     github: state.src === "github" ? state.q.github.trim().replace(/^@/, "") : "",
+    tokens: state.src === "tokens" ? state.q.tokens.trim().replace(/^@/, "") : "",
     coin: state.src === "coin" ? state.q.coin.trim() : "",
+    numbers: state.src === "numbers" && data?.src === "numbers" ? data.values : [],
     range: state.range, style: state.style, width: state.w, rows: state.rows, smooth: state.smooth,
     caption: "", stamp: true, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC",
   }, null, 2);
@@ -396,8 +430,9 @@ function draw(mode = "none") {
   fit();
   $("#copy").disabled = false;
   const label = RANGES[data.src].find(([k]) => k === state.range)[1];
-  $("#summary").textContent = data.src === "github"
-    ? `Chart of ${stat.split(" in ")[0]} for ${data.user} over ${label}.`
+  $("#summary").textContent =
+    data.src === "github" || data.src === "tokens" ? `Chart of ${stat.split(" in ")[0]} for ${data.user} over ${label}.`
+    : data.src === "numbers" ? `Chart of ${data.values.length} numbers, ending at ${stat}.`
     : `Chart of ${data.name}'s price over ${label}, ${stat.split(" ")[1]}.`;
 }
 
@@ -413,15 +448,16 @@ function empty() {
 // The profile row: the real account once it loads, otherwise whatever was typed, quietly
 function who() {
   const img = $("#avatar"), live = data && data.src === state.src;
-  const pic = live ? (data.src === "github" ? data.avatar : data.image) : null;
+  const pic = live ? (data.src === "coin" ? data.image : data.avatar) : null;
   // The picture shows only once it has loaded; until then, or if it fails, the circle shows a letter
   if (!pic) { img.hidden = true; img.removeAttribute("src"); }
   else if (img.getAttribute("src") !== pic) { img.hidden = true; img.src = pic; }
   const q = state.q[state.src].trim().replace(/^[@$]/, "");
-  $("#initial").textContent = (live ? (data.src === "github" ? data.user : data.symbol) : q).slice(0, 1).toUpperCase();
-  const [name, handle] = live
-    ? (data.src === "github" ? [data.user, `@${data.user}`] : [data.name, `$${data.symbol.toUpperCase()} · ${data.network}`])
-    : [q, q && (state.src === "github" ? `@${q}` : `$${q.toUpperCase()}`)];
+  const [name, handle] =
+    state.src === "numbers" ? ["Your numbers", live ? `${data.values.length} values` : ""]
+    : live ? (data.src === "coin" ? [data.name, `$${data.symbol.toUpperCase()} · ${data.network}`] : [data.user, data.src === "tokens" ? `@${data.user} · tokenmaxxing` : `@${data.user}`])
+    : [q, q && (state.src === "coin" ? `$${q.toUpperCase()}` : `@${q}`)];
+  $("#initial").textContent = state.src === "numbers" ? "#" : (live && data.src === "coin" ? data.symbol : name || "").slice(0, 1).toUpperCase();
   for (const [id, text] of [["#name", name], ["#handle", handle]]) {
     $(id).textContent = text || "\u00a0";
     $(id).classList.toggle("ghosted", !live);
@@ -474,8 +510,8 @@ $("#avatar").addEventListener("error", (e) => (e.target.hidden = true));
 
 /* ---------------------------------------------------------------- sources (public/lib/sources.js)
    Coins are looked up from the visitor's own browser; GitHub goes through the Worker. */
-async function github(user) {
-  const r = await fetch(`/api/github/${encodeURIComponent(user)}`).catch(() => null);
+async function viaWorker(route, user) {
+  const r = await fetch(`/api/${route}/${encodeURIComponent(user)}`).catch(() => null);
   const j = r ? await r.json().catch(() => ({})) : {};
   if (!r?.ok) throw new Error(j.error || "Something broke. Try again.");
   return j;
@@ -486,11 +522,14 @@ let seq = 0;
 async function load(mode = "sweep") {
   const q = state.q[state.src].trim().replace(/^@/, "");
   syncUrl();
-  if (!q) { data = null; who(); draw(); note(state.src === "coin" ? "Paste a coin address or a ticker." : "Type a GitHub handle.", "quiet"); return; }
+  if (!q) { data = null; who(); draw(); note(ASK[state.src], "quiet"); return; }
   const mine = ++seq;
   $("#bio").classList.add("busy");
   try {
-    const j = state.src === "github" ? await github(q) : await coin(q, state.range);
+    const j = state.src === "github" ? await viaWorker("github", q)
+      : state.src === "tokens" ? await viaWorker("tokens", q)
+      : state.src === "coin" ? await coin(q, state.range)
+      : numbers(q);
     if (mine !== seq) return;
     data = { src: state.src, ...j };
     who();
@@ -523,11 +562,12 @@ function setSource(src) {
   state.range = DEFAULT_RANGE[src];
   const input = $("#q");
   input.value = state.q[src];
-  input.placeholder = src === "github" ? "GitHub handle" : "Coin address or ticker";
+  input.placeholder = PLACEHOLDER[src];
   input.setAttribute("aria-label", input.placeholder);
   if (!reduced.matches) input.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 180, easing: EASE });
   seg("#source", src);
   seg("#range", state.range, RANGES[src]);
+  $("#range").closest(".setting").hidden = src === "numbers"; // a list of numbers has no dates
   data = null;
   who();
   draw();
@@ -669,6 +709,11 @@ function showLive(e) {
   const box = $(".config");
   setTimeout(() => { box.classList.remove("flash"); box.offsetWidth; box.classList.add("flash"); }, reduced.matches ? 0 : 520);
 }
+// Secret names copy on click, so they're typed exactly as the Action expects
+document.querySelectorAll(".secret").forEach((b) => b.addEventListener("click", async () => {
+  const name = b.textContent;
+  try { await navigator.clipboard.writeText(name); b.textContent = "Copied"; setTimeout(() => (b.textContent = name), 1200); } catch {}
+}));
 $("#copy-config").addEventListener("click", async (e) => {
   const b = e.currentTarget;
   try { await navigator.clipboard.writeText(configText()); b.textContent = "Copied"; } catch { b.textContent = "Select and copy"; }
@@ -724,7 +769,8 @@ for (const b of document.querySelectorAll("#style button")) {
 
 /* ---------------------------------------------------------------- start */
 $("#q").value = state.q[state.src];
-$("#q").placeholder = state.src === "github" ? "GitHub handle" : "Coin address or ticker";
+$("#q").placeholder = PLACEHOLDER[state.src];
+$("#range").closest(".setting").hidden = state.src === "numbers";
 $("#q").setAttribute("aria-label", $("#q").placeholder);
 seg("#source", state.src);
 seg("#style", state.style);

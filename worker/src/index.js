@@ -3,12 +3,13 @@
 // GET /api/github/<user>   a year of daily contributions from GitHub's public graph
 // GET /api/gt/<path>       GeckoTerminal's data (via CoinGecko with the CG_PRO_KEY secret), cached at the edge:
 //                          the fallback when a visitor's own lookups are rate-limited
+// GET /api/tokens/<user>   daily AI token totals from tokenmaxxing.sh, cached for half an hour
 // GET /api/example         @taylor_'s live bio, the example under the tool (from fxtwitter, cached for half an hour)
 //
 // Browsers can't read GitHub's graph from another site, so it comes through here, cached at the edge for an hour.
 // Coins go straight from the page to GeckoTerminal; this Worker only steps in when that's refused.
 
-import { github } from "../../public/lib/sources.js";
+import { github, tokens } from "../../public/lib/sources.js";
 
 export default {
   async fetch(req, env) {
@@ -17,6 +18,14 @@ export default {
     if (gh) {
       try {
         return json(await github(decodeURIComponent(gh[1])), 3600);
+      } catch (e) {
+        return json({ error: e.status ? e.message : "Something broke. Try again." }, 0, e.status || 500);
+      }
+    }
+    const tk = url.pathname.match(/^\/api\/tokens\/([^/]+)$/);
+    if (tk) {
+      try {
+        return json(await tokens(decodeURIComponent(tk[1])), 1800);
       } catch (e) {
         return json({ error: e.status ? e.message : "Something broke. Try again." }, 0, e.status || 500);
       }

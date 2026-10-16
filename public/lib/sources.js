@@ -35,6 +35,36 @@ export async function github(user) {
   return { src: "github", user: handle, avatar: `https://github.com/${handle}.png?size=96`, days };
 }
 
+// AI token usage from tokenmaxxing.sh, summed across models per day. Their API doesn't allow other sites,
+// so the page asks through the Worker; bio.mjs calls it directly.
+export async function tokens(user) {
+  const login = String(user).trim().replace(/^@/, "");
+  if (!/^[A-Za-z0-9-]{1,39}$/.test(login)) throw fail(400, "That isn't a tokenmaxxing username.");
+  const day = (t) => new Date(t).toISOString().slice(0, 10);
+  const until = day(Date.now()), since = day(Date.now() - 400 * 86400000);
+  const get = async (p) => {
+    const r = await fetch(`https://api.tokenmaxxing.sh/profiles/${login}${p}`, { headers: { accept: "application/json" }, cf: { cacheTtl: 1800, cacheEverything: true } }).catch(() => null);
+    if (r?.status === 404) throw fail(404, `No tokenmaxxing user named ${login}.`);
+    if (!r?.ok) throw fail(502, "tokenmaxxing didn't answer. Try again in a minute.");
+    return r.json();
+  };
+  const [id, daily] = await Promise.all([get("/identity"), get(`/daily?since=${since}&until=${until}`)]);
+  const byDay = {};
+  for (const row of daily.days || []) byDay[row.date] = (byDay[row.date] || 0) + (row.totalTokens || 0);
+  const first = Object.keys(byDay).sort()[0];
+  if (!first) throw fail(404, `${login} hasn't synced any usage yet.`);
+  const days = [];
+  for (let t = Date.parse(`${first}T00:00:00Z`); t <= Date.parse(`${until}T00:00:00Z`); t += 86400000) days.push([day(t), byDay[day(t)] || 0]);
+  return { src: "tokens", user: id.login || login, avatar: id.avatarUrl || null, days };
+}
+
+// Your own numbers, typed or pasted: commas, spaces or new lines between them
+export function numbers(text) {
+  const values = String(text).split(/[\s,;]+/).map((x) => x.replace(/[$%]/g, "")).filter(Boolean).map(Number).filter(Number.isFinite);
+  if (values.length < 2) throw fail(400, "Paste at least two numbers.");
+  return { src: "numbers", values: values.slice(-500) };
+}
+
 const GT = "https://api.geckoterminal.com/api/v2";
 // range: [timeframe, aggregate, candles, days shown]. 7D and 30D share one hourly fetch.
 const HISTORY = { "1d": ["minute", 15, 96, 1], "7d": ["hour", 1, 720, 7], "30d": ["hour", 1, 720, 30], "90d": ["day", 1, 90, 90] };
