@@ -221,6 +221,7 @@
   .secret { justify-self: start; padding: 4px 8px; border: 0; border-radius: 8px; background: var(--fill); color: var(--ink); font: 500 13px/20px var(--mono); transition: transform 0.15s var(--ease); }
   .secret:active { transform: scale(0.97); }
   .steps .aside { margin-top: 10px; color: var(--ink-3); font-size: 14px; line-height: 20px; }
+  .steps .aside a { color: var(--ink-2); }
   .steps code { font: 500 14px/24px var(--mono); }
   .steps a { text-decoration-color: color-mix(in srgb, currentColor 35%, transparent); text-underline-offset: 3px; }
   .config { position: relative; margin-top: 12px; }
@@ -346,7 +347,8 @@ the line spikes when i'm close</span></span></span>.</p>
       <div class="how" id="how-steps"><div><div class="how-body">
         <h3>On GitHub</h3>
         <ol class="steps">
-          <li><span><a href="https://github.com/gtmcknight/spark/fork">Fork gtmcknight/spark</a>. In your fork, open <b>Actions</b> and click <b>I understand my workflows, go ahead and enable them</b>.</span></li>
+          <li><span><a href="https://github.com/gtmcknight/spark/fork">Fork gtmcknight/spark</a>. In your fork, open <b>Actions</b> and click <b>I understand my workflows, go ahead and enable them</b>.</span>
+            <span class="aside"><a href="https://github.com/gtmcknight/spark">The code</a> is open: your X keys stay in your fork, and only <a href="https://github.com/gtmcknight/spark/blob/main/bio.mjs">bio.mjs</a> uses them, to update your bio.</span></li>
           <li><span>Open <code>config.json</code> in your fork, click the pencil, replace everything with this, and commit. It draws the chart above.</span>
             <div class="config"><pre id="config"></pre><button class="quiet" id="copy-config" type="button">Copy</button></div></li>
           <li><span>Go to <b>Settings → Secrets and variables → Actions</b> and leave the tab open. Your X keys go here.</span></li>
