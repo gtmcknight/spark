@@ -211,6 +211,10 @@
   .steps li { counter-increment: step; display: grid; grid-template-columns: 28px minmax(0, 1fr); font-size: 16px; line-height: 24px; }
   .steps li::before { content: counter(step); grid-row: span 2; color: var(--ink-3); font: 500 12px/24px var(--mono); }
   .steps li > * { grid-column: 2; }
+  .repo { display: inline-flex; align-items: center; gap: 8px; margin-top: 20px; color: var(--ink-2); font-size: 14px; line-height: 20px; text-decoration: none; transition: color 0.2s var(--ease); }
+  .repo:hover { color: var(--ink); }
+  .repo svg { width: 16px; height: 16px; flex: none; }
+  .repo b { color: var(--ink); font-weight: 600; }
   .how-body h3 { margin: 20px 0 0; color: var(--ink-2); font-size: 14px; font-weight: 600; }
   .how-body h3 + .steps { margin-top: 12px; }
   .steps b { font-weight: 600; }
@@ -346,14 +350,15 @@ the line spikes when i'm close</span></span></span>.</p>
         <button class="quiet" id="how" type="button" aria-expanded="false" aria-controls="how-steps"><span class="label">Show me how</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
       </div>
       <div class="how" id="how-steps"><div><div class="how-body">
+        <a class="repo" href="https://github.com/gtmcknight/spark"><svg aria-hidden="true"><use href="#mark-github"/></svg><span>Open source on <b>gtmcknight/spark</b></span></a>
         <h3>On GitHub</h3>
         <ol class="steps">
-          <li><span><a href="https://github.com/gtmcknight/spark/fork">Fork gtmcknight/spark</a>. In your fork, open <b>Actions</b> and click <b>I understand my workflows, go ahead and enable them</b>.</span>
-            <span class="aside"><a href="https://github.com/gtmcknight/spark">The code</a> is open: your X keys stay in your fork, and only <a href="https://github.com/gtmcknight/spark/blob/main/bio.mjs">bio.mjs</a> uses them, to update your bio.</span></li>
+          <li><span><a href="https://github.com/gtmcknight/spark/fork">Fork gtmcknight/spark</a>. In your fork, open <b>Actions</b> and click <b>I understand my workflows, go ahead and enable them</b>.</span></li>
           <li><span>Open <code>config.json</code> in your fork, click the pencil, replace everything with this, and commit. It draws the chart above.</span>
             <div class="config"><pre id="config"></pre><button class="quiet" id="copy-config" type="button">Copy</button></div>
             <span class="aside">Your own words go in <code>bio</code>: add lines above or below <code>{chart}</code>, or delete <code>{stat}</code> or <code>{link}</code> to drop it.</span></li>
-          <li><span>Go to <b>Settings → Secrets and variables → Actions</b> and leave the tab open. Your X keys go here.</span></li>
+          <li><span>Go to <b>Settings → Secrets and variables → Actions</b> and leave the tab open. Your X keys go here.</span>
+            <span class="aside">Only <a href="https://github.com/gtmcknight/spark/blob/main/bio.mjs">bio.mjs</a> reads them, to update your bio. This site never sees them.</span></li>
         </ol>
         <h3>On X</h3>
         <ol class="steps">
