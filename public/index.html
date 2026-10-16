@@ -25,6 +25,7 @@
     --fill: #16181a;
     --accent: #4ade80;
     --bad: #ff7a7a;
+    --link: #1d9bf0; /* X shows links in a bio in this blue, in both themes */
     --shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
     --ease: cubic-bezier(0.16, 1, 0.3, 1);
     --spring: cubic-bezier(0.34, 1.26, 0.64, 1); /* a little overshoot, for things that slide */
@@ -83,7 +84,16 @@
 
   /* examples under the input: inspiration that loads into the tool */
   .try { margin: -2px 0 4px; padding: 0 20px; color: var(--ink-3); font-size: 14px; line-height: 20px; }
-  .try button { padding: 0; border: 0; background: none; color: var(--ink-2); font-size: 14px; transition: color 0.2s var(--ease); }
+  .try button { display: inline-flex; align-items: center; gap: 5px; padding: 0; border: 0; background: none; color: var(--ink-2); font-size: 14px; vertical-align: top; transition: color 0.2s var(--ease); }
+  .try .ico { width: 14px; height: 14px; flex: none; border-radius: 999px; object-fit: cover; opacity: 0.85; transition: opacity 0.2s var(--ease); }
+  .try svg.ico { border-radius: 0; }
+  .try button:hover .ico { opacity: 1; }
+  .hint { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.35s var(--ease); }
+  .hint.open { grid-template-rows: 1fr; }
+  .hint > div { overflow: hidden; }
+  .hint p { margin: 0 0 8px; padding: 0 20px; color: var(--ink-3); font-size: 14px; line-height: 20px; }
+  .hint a { color: var(--ink-2); text-decoration-color: color-mix(in srgb, currentColor 35%, transparent); text-underline-offset: 3px; }
+  #q::-webkit-search-cancel-button { display: none; }
   .try button:hover { color: var(--ink); }
   .try i { font-style: normal; margin: 0 6px; }
 
@@ -116,7 +126,7 @@
   /* the preview: a profile whose bio is the chart */
   /* one frame: the preview on top, the settings below, split by hairlines */
   .frame { border: 1px solid var(--rule); border-radius: 20px; }
-  .card { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "who actions" "bio bio" "stat stat"; column-gap: 12px; padding: 20px; }
+  .card { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "who actions" "bio bio" "stat stat" "link link"; column-gap: 12px; padding: 20px; }
   .who { grid-area: who; display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
   .actions { grid-area: actions; display: flex; gap: 8px; margin-top: 4px; }
   .bio { grid-area: bio; }
@@ -135,6 +145,11 @@
   .stat { min-height: 20px; }
   .stat.quiet { color: var(--ink-2); }
   .stat.bad { color: var(--bad); }
+  /* the source link under the stat, blue like X draws it; folds away for coins and numbers */
+  .link { grid-area: link; display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.28s var(--ease); }
+  .link.open { grid-template-rows: 1fr; }
+  .link a { justify-self: start; min-height: 0; overflow: hidden; color: var(--link); font: 400 15px/20px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; text-decoration: none; }
+  .link a:hover { text-decoration: underline; }
 
   /* controls */
   .settings { border-top: 1px solid var(--rule); }
@@ -226,20 +241,25 @@
     .slider { height: 46px; }
     .foot { grid-template-columns: auto minmax(0, 1fr); gap: 16px; padding: 8px 16px; }
     .fit { text-align: right; }
-    .card { grid-template-columns: minmax(0, 1fr); grid-template-areas: "who" "bio" "stat" "actions"; }
+    .card { grid-template-columns: minmax(0, 1fr); grid-template-areas: "who" "bio" "stat" "link" "actions"; }
     .actions { margin-top: 16px; }
     .actions > * { flex: 1; height: 46px; }
   }
-  @media (prefers-reduced-motion: reduce) { .how, .more { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { .how, .more, .hint, .link { transition: none; } }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition: none !important; animation: none !important; } }
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position: absolute" aria-hidden="true">
+  <defs><mask id="coin-cut"><rect width="16" height="16" fill="#fff"/><text x="8" y="12.1" text-anchor="middle" font-size="11.5" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" fill="#000">$</text></mask></defs>
+  <symbol id="mark-github" viewBox="0 0 16 16"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></symbol>
+  <symbol id="mark-coin" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8" fill="currentColor" mask="url(#coin-cut)"/></symbol>
+</svg>
 <div class="wrap">
   <header class="top">
     <a class="logo" href="/"><b aria-hidden="true">⣰⣷</b>spark</a>
     <nav class="utils">
-      <a class="ghost icon" href="https://github.com/gtmcknight/line-in-bio" aria-label="Source on GitHub"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a class="ghost icon" href="https://github.com/gtmcknight/line-in-bio" aria-label="Source on GitHub"><svg aria-hidden="true"><use href="#mark-github"/></svg></a>
       <button class="ghost icon" id="theme" type="button" aria-label="Day mode"></button>
     </nav>
   </header>
@@ -255,10 +275,11 @@
         <div class="seg" id="source" role="group" aria-label="Source">
           <button type="button" data-v="github">GitHub</button><button type="button" data-v="tokens">Tokens</button><button type="button" data-v="coin">Coin</button><button type="button" data-v="numbers">Numbers</button><span class="thumb"></span>
         </div>
-        <input id="q" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go" aria-label="GitHub handle">
+        <input id="q" type="search" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go" aria-label="GitHub handle" data-1p-ignore data-lpignore="true" data-bwignore data-form-type="other">
         <button class="go" type="submit" aria-label="Make the chart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
       </form>
-      <p class="try">Try <button type="button" data-src="github" data-q="gtmcknight">gtmcknight</button><i>·</i><button type="button" data-src="github" data-q="surfer77">surfer77</button><i>·</i><button type="button" data-src="coin" data-q="0xD34a99Bc0f67aE1bbd63C660e6d0b0dd03E263B7">$IMD</button><i>·</i><button type="button" data-src="coin" data-q="0xa0df17b5ac76ababa36e1450e2cbcd18a620c845">$FWA</button><i>·</i><button type="button" data-src="coin" data-q="ETH">$ETH</button><i>·</i><button type="button" data-src="tokens" data-q="gtmcknight">gtmcknight's tokens</button></p>
+      <div class="hint" id="hint"><div><p>Uses <a href="https://tokenmaxxing.sh" target="_blank" rel="noopener">tokenmaxxing.sh</a>, which tracks your AI coding tokens. Sign up there to get a username.</p></div></div>
+      <p class="try">Try <button type="button" data-src="github" data-q="gtmcknight"><svg class="ico" aria-hidden="true"><use href="#mark-github"/></svg>gtmcknight</button><i>·</i><button type="button" data-src="github" data-q="surfer77"><svg class="ico" aria-hidden="true"><use href="#mark-github"/></svg>surfer77</button><i>·</i><button type="button" data-src="coin" data-q="0xD34a99Bc0f67aE1bbd63C660e6d0b0dd03E263B7"><svg class="ico" aria-hidden="true"><use href="#mark-coin"/></svg>$IMD</button><i>·</i><button type="button" data-src="coin" data-q="0xa0df17b5ac76ababa36e1450e2cbcd18a620c845"><svg class="ico" aria-hidden="true"><use href="#mark-coin"/></svg>$FWA</button><i>·</i><button type="button" data-src="coin" data-q="ETH"><svg class="ico" aria-hidden="true"><use href="#mark-coin"/></svg>$ETH</button><i>·</i><button type="button" data-src="tokens" data-q="gtmcknight"><img class="ico" src="https://tokenmaxxing.sh/favicon.png" alt="" loading="lazy">gtmcknight's tokens</button></p>
 
       <div class="frame">
         <article class="card">
@@ -271,6 +292,7 @@
             </div>
           <pre class="bio" id="bio" aria-hidden="true"></pre>
           <p class="stat" id="stat" role="status"></p>
+          <div class="link" id="link"><a target="_blank" rel="noopener"></a></div>
           <p class="sr" id="summary"></p>
         </article>
 
@@ -401,13 +423,13 @@ function configText() {
     coin: state.src === "coin" ? state.q.coin.trim() : "",
     numbers: state.src === "numbers" && data?.src === "numbers" ? data.values : [],
     range: state.range, style: state.style, width: state.w, rows: state.rows, smooth: state.smooth,
-    caption: "", stamp: true, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC",
+    caption: "", link: true, stamp: true, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC",
   }, null, 2);
 }
 
 /* ---------------------------------------------------------------- the chart (public/lib/chart.js) */
 const view = (progress = 1) => render(data, { range: state.range, style: state.style, width: state.w, rows: state.rows, smooth: state.smooth, progress });
-const fullText = () => { const { chart, stat } = view(); return `${chart}\n${stat}`; };
+const fullText = () => { const { chart, stat, link } = view(); return [chart, stat, link].filter(Boolean).join("\n"); };
 
 /* ---------------------------------------------------------------- drawing */
 let raf = 0;
@@ -417,7 +439,7 @@ const EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
 function draw(mode = "none") {
   cancelAnimationFrame(raf);
   if (!data || data.src !== state.src) return empty();
-  const stat = view().stat, t0 = performance.now();
+  const { stat, link } = view(), t0 = performance.now();
   const dur = reduced.matches ? 0 : { sweep: 560, quick: 320 }[mode] || 0;
   const frame = (now) => {
     const p = dur ? Math.min(1, (now - t0) / dur) : 1;
@@ -427,6 +449,7 @@ function draw(mode = "none") {
   frame(t0);
   if (mode === "fade" && !reduced.matches) $("#bio").animate([{ opacity: 0.2 }, { opacity: 1 }], { duration: 240, easing: EASE });
   note(stat);
+  showLink(link);
   fit();
   $("#copy").disabled = false;
   const label = RANGES[data.src].find(([k]) => k === state.range)[1];
@@ -441,6 +464,7 @@ function empty() {
   const cols = state.w, rows = state.rows;
   const floor = state.style === "blocks" ? BLOCKS[0].repeat(cols) : [...Array(rows - 1).fill(BLANK.repeat(cols)), "⣀".repeat(cols)].join("\n");
   $("#bio").textContent = floor;
+  showLink("");
   $("#copy").disabled = true;
   fit();
 }
@@ -482,6 +506,15 @@ function note(text = "", kind = "") {
     if (p < 1) statRaf = requestAnimationFrame(step);
   };
   step(t0);
+}
+
+// The source link, a line of its own the way X shows one; it folds away, keeping its old text while it does
+function showLink(text) {
+  $("#link").classList.toggle("open", !!text);
+  if (!text) return;
+  const a = $("#link a");
+  a.textContent = text;
+  a.href = `https://${text}`;
 }
 
 // Grows or shrinks an element from its old height, so the frame eases instead of jumping
@@ -568,6 +601,7 @@ function setSource(src) {
   seg("#source", src);
   seg("#range", state.range, RANGES[src]);
   $("#range").closest(".setting").hidden = src === "numbers"; // a list of numbers has no dates
+  $("#hint").classList.toggle("open", src === "tokens");
   data = null;
   who();
   draw();
@@ -771,6 +805,7 @@ for (const b of document.querySelectorAll("#style button")) {
 $("#q").value = state.q[state.src];
 $("#q").placeholder = PLACEHOLDER[state.src];
 $("#range").closest(".setting").hidden = state.src === "numbers";
+$("#hint").classList.toggle("open", state.src === "tokens");
 $("#q").setAttribute("aria-label", $("#q").placeholder);
 seg("#source", state.src);
 seg("#style", state.style);

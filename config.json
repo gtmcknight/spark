@@ -8,6 +8,7 @@
   "rows": 2,
   "smooth": true,
   "caption": "",
+  "link": true,
   "stamp": true,
   "timezone": "America/New_York"
 }

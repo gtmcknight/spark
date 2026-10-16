@@ -67,6 +67,13 @@ function statLine(data, range, total) {
   return `$${data.symbol.toUpperCase()} ${pct >= 0 ? "+" : "-"}${Math.abs(pct).toFixed(1)}% in ${label}`;
 }
 
+// Where the numbers live, as a line people can tap in a bio. A coin's stat already names it ($IMD); your own numbers have no page.
+function linkLine(data) {
+  if (data.src === "github") return `github.com/${data.user}`;
+  if (data.src === "tokens") return `tokenmaxxing.sh/${data.user}`;
+  return "";
+}
+
 /**
  * Values as text: one value per dot column (two per character), or one per character for blocks.
  * width is in characters; rows of braille (blocks are always one row); progress (0 to 1) reveals it left to right.
@@ -94,10 +101,10 @@ export function draw(values, { style = "bars", width = 24, rows = 2, progress = 
   return lines.join("\n");
 }
 
-// A source's chart and its stat line
+// A source's chart, its stat line, and its link line
 export function render(data, { range, style = "bars", width = 24, rows = 2, smooth = true, progress = 1 }) {
   const s = series(data, range, style === "blocks" ? width : width * 2, smooth);
-  return { chart: draw(s.values, { style, width, rows, progress }), stat: statLine(data, range, s.total) };
+  return { chart: draw(s.values, { style, width, rows, progress }), stat: statLine(data, range, s.total), link: linkLine(data) };
 }
 
 // X bios allow 160 characters; posts allow 280, counting a chart character as 2

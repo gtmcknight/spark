@@ -24,7 +24,7 @@ const data = src === "github" ? await github(config.github)
   : src === "tokens" ? await tokens(config.tokens)
   : src === "coin" ? await coin(config.coin, range)
   : numbers(config.numbers.join(" "));
-const { chart, stat } = render(data, { range, style, width, rows, smooth: config.smooth !== false });
+const { chart, stat, link } = render(data, { range, style, width, rows, smooth: config.smooth !== false });
 
 // Optional: when it last updated, after the chart's top line ("10/15 11am"), so people can see it's live
 const lines = chart.split("\n");
@@ -34,10 +34,10 @@ if (config.stamp) {
   lines[0] += ` ${p.month}/${p.day} ${p.hour % 12 || 12}${p.hour < 12 ? "am" : "pm"}`;
 }
 
-const bio = [...lines, stat, config.caption].filter(Boolean).join("\n");
+const bio = [...lines, stat, config.link === false ? "" : link, config.caption].filter(Boolean).join("\n");
 const length = [...bio].length;
 console.log(`${bio}\n\n${length} of 160 characters`);
-if (length > 160) stop("Too long for an X bio. Lower width or rows in config.json.");
+if (length > 160) stop("Too long for an X bio. Lower width or rows in config.json, or set link to false.");
 if (!live) process.exit(0);
 
 const keys = ["X_API_KEY", "X_API_SECRET", "X_ACCESS_TOKEN", "X_ACCESS_SECRET"].map((k) => process.env[k]);
