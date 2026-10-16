@@ -621,6 +621,7 @@ function setSource(src) {
   data = null;
   who();
   draw();
+  note(); // the old source's number shouldn't roll into the new one's
   load();
   if (!state.q[src]) input.focus();
 }
