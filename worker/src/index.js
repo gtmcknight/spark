@@ -56,7 +56,7 @@ async function geckoTerminal(url, env) {
 // fxtwitter sometimes says 404 for a real account, so only good answers are cached, and the last one stands in when it fails.
 async function example(url, ctx) {
   const last = new Request(new URL("/api/example?last", url));
-  const r = await fetch("https://api.fxtwitter.com/taylor_", { headers: { "user-agent": "line-in-bio" }, cf: { cacheTtlByStatus: { "200-299": 1800, "300-599": 0 } } }).catch(() => null);
+  const r = await fetch("https://api.fxtwitter.com/taylor_", { headers: { "user-agent": "spark" }, cf: { cacheTtlByStatus: { "200-299": 1800, "300-599": 0 } } }).catch(() => null);
   const u = r?.ok ? (await r.json().catch(() => ({}))).user : null;
   if (!u?.description) return (await caches.default.match(last)) || json({ error: "Couldn't read the example.", upstream: r?.status ?? "no answer" }, 0, 502);
   const body = { name: u.name, handle: u.screen_name, avatar: u.avatar_url?.replace("_normal", "_200x200"), bio: u.description, url: `https://x.com/${u.screen_name}` };

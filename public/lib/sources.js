@@ -11,7 +11,7 @@ export async function github(user) {
   const handle = String(user).trim().replace(/^@/, "");
   if (!/^[A-Za-z0-9-]{1,39}$/.test(handle)) throw fail(400, "That isn't a GitHub handle.");
   const r = await fetch(`https://github.com/users/${handle}/contributions`, {
-    headers: { "user-agent": "line-in-bio" },
+    headers: { "user-agent": "spark" },
     cf: { cacheTtl: 3600, cacheEverything: true },
   }).catch(() => null);
   if (r?.status === 404) throw fail(404, `No GitHub user named ${handle}.`);

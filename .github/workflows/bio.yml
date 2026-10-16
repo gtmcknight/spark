@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   bio:
-    if: github.repository != 'gtmcknight/line-in-bio' # runs in forks, not here
+    if: github.repository != 'gtmcknight/spark' # runs in forks, not here
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
