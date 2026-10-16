@@ -41,7 +41,7 @@ async function geckoTerminal(url) {
 async function example() {
   const r = await fetch("https://api.fxtwitter.com/taylor_", { headers: { "user-agent": "line-in-bio" }, cf: { cacheTtl: 1800, cacheEverything: true } }).catch(() => null);
   const u = r?.ok ? (await r.json().catch(() => ({}))).user : null;
-  if (!u?.description) return json({ error: "Couldn't read the example." }, 0, 502);
+  if (!u?.description) return json({ error: "Couldn't read the example.", upstream: r?.status ?? "no answer" }, 0, 502);
   return json({ name: u.name, handle: u.screen_name, avatar: u.avatar_url?.replace("_normal", "_200x200"), bio: u.description, url: `https://x.com/${u.screen_name}` }, 1800);
 }
 
