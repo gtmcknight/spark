@@ -35,7 +35,7 @@ X bills each update to your developer account. Twice a day costs a few cents. Gi
 | `rows` | Lines tall, 1 to 4. Blocks are always one line. |
 | `smooth` | `true` blends neighbouring days into a curve. `false` keeps every day (or price) as its own sharp bar. |
 | `caption` | An extra line under the stats, in your words. Leave it empty for none. |
-| `link` | Adds a line linking to the source, like `github.com/you`. Coins and numbers don't get one. |
+| `link` | Adds a line linking to the source: `github.com/you`, your tokenmaxxing page, or the coin's GeckoTerminal page. Numbers don't get one. |
 | `stamp` | Adds the update time after the chart's top line, so people can see it's live. |
 | `timezone` | The timezone for the stamp, like `America/New_York`. |
 

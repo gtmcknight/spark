@@ -120,7 +120,7 @@ async function findCoin(want) {
   const dex = await dexToken(pool.token.address);
   const art = pool.token.image_url && !/missing/.test(pool.token.image_url) ? pool.token.image_url : dex?.image ?? null;
   const [name, symbol] = pool.token.address.toLowerCase() === WETH ? ["Ether", "ETH"] : [dex?.name || pool.token.name, dex?.symbol || pool.token.symbol];
-  return { name, symbol, image: art, network: pool.network, pool: pool.address, candles: {} };
+  return { name, symbol, image: art, network: pool.network, address: pool.token.address, pool: pool.address, candles: {} };
 }
 
 export async function coin(q, range) {
@@ -139,7 +139,7 @@ export async function coin(q, range) {
   const candles = (await c.candles[k]).filter(([t]) => t >= since);
   if (candles.length < 2) throw fail(404, "Not enough trading history yet.");
   return {
-    src: "coin", name: c.name, symbol: c.symbol, image: c.image, network: c.network,
+    src: "coin", name: c.name, symbol: c.symbol, image: c.image, network: c.network, address: c.address,
     points: candles.map(([t, , , , close]) => [t, close]),
     change: candles.at(-1)[4] / candles[0][1] - 1,
   };

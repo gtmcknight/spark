@@ -145,10 +145,10 @@
   .stat { min-height: 20px; }
   .stat.quiet { color: var(--ink-2); }
   .stat.bad { color: var(--bad); }
-  /* the source link under the stat, blue like X draws it; folds away for coins and numbers */
-  .link { grid-area: link; display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.28s var(--ease); }
+  /* the source link under the stat, blue and cut short with an ellipsis like X draws it; folds away for your own numbers */
+  .link { grid-area: link; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: 0fr; transition: grid-template-rows 0.28s var(--ease); }
   .link.open { grid-template-rows: 1fr; }
-  .link a { justify-self: start; min-height: 0; overflow: hidden; color: var(--link); font: 400 15px/20px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; text-decoration: none; }
+  .link a { justify-self: start; max-width: 100%; min-height: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: var(--link); font: 400 15px/20px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; text-decoration: none; }
   .link a:hover { text-decoration: underline; }
 
   /* controls */

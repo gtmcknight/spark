@@ -67,10 +67,12 @@ function statLine(data, range, total) {
   return `$${data.symbol.toUpperCase()} ${pct >= 0 ? "+" : "-"}${Math.abs(pct).toFixed(1)}% in ${label}`;
 }
 
-// Where the numbers live, as a line people can tap in a bio. A coin's stat already names it ($IMD); your own numbers have no page.
+// Where the numbers live, as a line people can tap in a bio. A coin's token page opens the pool its chart comes from
+// (shorter than the pool's own address, which runs 94 characters for a Uniswap v4 pool). Your own numbers have no page.
 function linkLine(data) {
   if (data.src === "github") return `github.com/${data.user}`;
   if (data.src === "tokens") return `tokenmaxxing.sh/${data.user}`;
+  if (data.src === "coin" && data.address) return `geckoterminal.com/${data.network}/tokens/${data.address}`;
   return "";
 }
 
