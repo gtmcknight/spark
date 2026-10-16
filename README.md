@@ -1,4 +1,4 @@
-# line in bio
+# spark
 
 Sparklines made of text, for your X bio or a post: GitHub activity, AI token usage, a coin's price, or your own numbers. Make one at **[spark.rhps.fun](https://spark.rhps.fun)**, or let this repo redraw it in your bio twice a day.
 

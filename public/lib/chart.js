@@ -1,4 +1,4 @@
-// line in bio: the chart. Pure functions, shared by the site and by bio.mjs, so both draw the same thing.
+// spark: the chart. Pure functions, shared by the site and by bio.mjs, so both draw the same thing.
 
 export const STYLES = ["bars", "line", "wave", "negative", "blocks"];
 export const WIDTH = { min: 6, max: 48, start: 24 }; // 48 is the widest that fits a desktop bio or post without wrapping

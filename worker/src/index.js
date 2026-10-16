@@ -1,4 +1,4 @@
-// line in bio: charts made of text, for a bio or a post.
+// spark: sparklines made of text, for a bio or a post.
 //
 // GET /api/github/<user>   a year of daily contributions from GitHub's public graph
 // GET /api/gt/<path>       GeckoTerminal's data (via CoinGecko with the CG_PRO_KEY secret), cached at the edge:

@@ -1,4 +1,4 @@
-// line in bio: where the numbers come from. Shared by the site, its Worker, and bio.mjs.
+// spark: where the numbers come from. Shared by the site, its Worker, and bio.mjs.
 //
 // github() reads GitHub's public contribution graph. Browsers can't fetch it from another site,
 // so the site calls it through the Worker; bio.mjs calls it directly.

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Puts a line in bio chart in your X bio. `node bio.mjs` prints it; `node bio.mjs --live` posts it.
+// Puts a spark sparkline in your X bio. `node bio.mjs` prints it; `node bio.mjs --live` posts it.
 // Settings live in config.json. X keys come from the environment (your fork's Actions secrets).
 
 import crypto from "node:crypto";
