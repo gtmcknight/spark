@@ -67,7 +67,7 @@
   .ghost svg { width: 18px; height: 18px; }
 
   /* hero */
-  .hero { padding: clamp(16px, 4vh, 40px) 0 24px; }
+  .hero { padding: clamp(12px, 3vh, 40px) 0 20px; }
   h1 { margin: 0; font-size: clamp(36px, 8vw, 52px); line-height: 1; font-weight: 700; letter-spacing: -0.045em; }
   h1 .spark { color: var(--accent); font-weight: 400; letter-spacing: -0.1em; margin-left: 0.14em; }
   .lede { margin: 12px 0 0; max-width: 32em; font-size: 16px; line-height: 24px; color: var(--ink-2); }
@@ -106,7 +106,7 @@
   .seg button[aria-pressed="true"] { color: var(--ink); }
   .glyph { pointer-events: none; margin-right: 6px; font: 400 16px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; letter-spacing: -0.02em; }
   .glyph.blocks { font-size: 10px; letter-spacing: 0; } /* block characters fill the whole line; this matches the dots' height */
-  #style button { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; height: 56px; }
+  #style button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; } /* each name with a tiny version of itself beside it */
   #style .glyph { margin: 0; }
   .slider input:focus-visible { outline: none; }
   .slider:has(input:focus-visible) { outline: 2px solid color-mix(in srgb, var(--accent) 75%, transparent); outline-offset: 2px; }
@@ -180,24 +180,29 @@
   .quiet:hover { background: var(--fill); }
   .quiet:active { transform: scale(0.96); }
 
-  footer { padding: 64px 0 calc(32px + env(safe-area-inset-bottom)); color: var(--ink-3); font: 500 12px/16px var(--mono); text-align: center; }
+  footer { padding: 28px 0 calc(24px + env(safe-area-inset-bottom)); color: var(--ink-3); font: 500 12px/16px var(--mono); text-align: center; }
   footer a { text-decoration-color: color-mix(in srgb, currentColor 35%, transparent); text-underline-offset: 3px; }
 
-  /* keep it live: a bar with a real bio it keeps updated, and the steps folded inside */
+  /* keep it live: one line and a button, with the steps folded inside */
   html { scroll-behavior: smooth; }
   .live { margin-top: 16px; border: 1px solid var(--rule); border-radius: 20px; scroll-margin-top: 24px; }
-  .live-bar { display: grid; grid-template-columns: 316px minmax(0, 1fr); align-items: center; gap: 24px; padding: 20px; } /* wide enough for a 24-wide chart and its stamp on one line */
-  .live h2 { margin: 0; font-size: 20px; line-height: 24px; font-weight: 700; letter-spacing: -0.01em; }
-  .live-copy p { margin: 8px 0 16px; font-size: 16px; line-height: 24px; color: var(--ink-2); }
-  .live-copy .quiet svg { width: 16px; height: 16px; margin-left: 6px; transition: transform 0.3s var(--ease); }
-  .live-copy .quiet[aria-expanded="true"] svg { transform: rotate(180deg); }
-  .example { display: block; padding: 14px; border-radius: 14px; background: var(--fill); color: var(--ink); text-decoration: none; transition: transform 0.2s var(--ease); }
-  .example:hover { transform: translateY(-1px); }
+  .live-bar { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px 24px; padding: 16px 20px; }
+  .live h2 { margin: 0; font-size: 16px; line-height: 24px; font-weight: 650; letter-spacing: -0.01em; }
+  .live-copy p { margin: 0; font-size: 14px; line-height: 20px; color: var(--ink-2); }
+  #how svg { width: 16px; height: 16px; margin-left: 6px; transition: transform 0.3s var(--ease); }
+  #how[aria-expanded="true"] svg { transform: rotate(180deg); }
+  /* the proof: hover the handle and the real bio this keeps updated rises from it, like an X hover card */
+  .ex { position: relative; }
+  .ex > a { color: var(--ink); text-decoration-color: color-mix(in srgb, currentColor 35%, transparent); text-underline-offset: 3px; }
+  .ex-card { position: absolute; z-index: 2; left: 50%; bottom: calc(100% + 10px); display: block; width: 300px; padding: 14px; border: 1px solid var(--rule); border-radius: 14px; background: var(--bg); color: var(--ink); box-shadow: var(--shadow); opacity: 0; visibility: hidden; pointer-events: none; transform: translate(-50%, 6px) scale(0.97); transform-origin: 50% 100%; transition: opacity 0.15s var(--ease), transform 0.2s var(--ease), visibility 0s linear 0.2s; }
+  @media (hover: none) { .ex-card { display: none; } } /* on touch, the handle just opens the profile */
+  @media (hover: hover) {
+    .ex:hover .ex-card, .ex > a:focus-visible + .ex-card { opacity: 1; visibility: visible; transform: translate(-50%, 0); transition: opacity 0.2s var(--ease) 0.15s, transform 0.3s var(--ease) 0.15s, visibility 0s linear 0.15s; }
+  }
   .ex-who { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 14px; }
   .ex-who img { width: 28px; height: 28px; border-radius: 999px; background: var(--rule); }
   .ex-who span { color: var(--ink-3); }
-  .ex-bio { margin: 0; font: 400 12px/16px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; white-space: pre-wrap; overflow-wrap: anywhere; }
-  .ex-note { margin-top: 10px; color: var(--ink-3); font: 500 12px/16px var(--mono); }
+  .ex-bio { display: block; font: 400 12px/16px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; white-space: pre-wrap; overflow-wrap: anywhere; }
   .how { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s var(--ease); }
   .how.open { grid-template-rows: 1fr; }
   .how > div { overflow: hidden; }
@@ -233,11 +238,12 @@
     .field .seg button { flex: 1; padding: 0 4px; }
     .card { padding: 16px; }
     .live-bar { grid-template-columns: minmax(0, 1fr); gap: 16px; padding: 16px; }
-    .live-copy .quiet { width: 100%; height: 46px; }
+    #how { width: 100%; height: 46px; }
     .how-body { padding: 4px 16px 16px; }
     .keys-map > div { grid-template-columns: minmax(0, 1fr); gap: 2px; padding: 8px 12px; }
     .setting { grid-template-columns: minmax(0, 1fr); gap: 8px; padding: 12px 16px; }
     .setting .seg button { height: 40px; padding: 0 4px; }
+    #style button { flex-direction: column; gap: 4px; height: 56px; } /* five across a phone: the tiny version sits above its name */
     .slider { height: 46px; }
     .foot { grid-template-columns: auto minmax(0, 1fr); gap: 16px; padding: 8px 16px; }
     .fit { text-align: right; }
@@ -245,6 +251,8 @@
     .actions { margin-top: 16px; }
     .actions > * { flex: 1; height: 46px; }
   }
+  /* short laptop screens: a little less air up top, so the whole page fits without scrolling */
+  @media (min-width: 561px) and (max-height: 840px) { .top { height: 56px; } .hero { padding: 8px 0 16px; } }
   @media (prefers-reduced-motion: reduce) { .how, .more, .hint, .link { transition: none; } }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition: none !important; animation: none !important; } }
 </style>
@@ -267,7 +275,7 @@
   <main>
     <section class="hero">
       <h1>Charts you can paste<span class="spark" id="spark" aria-hidden="true"></span></h1>
-      <p class="lede">Turn a GitHub handle, AI tokens, a coin or your own numbers into a sparkline made of text, for your bio, a post, or anywhere text goes.</p>
+      <p class="lede">Sparklines made of text, for your bio, a post, or anywhere text goes.</p>
     </section>
 
     <section class="tool" aria-label="Make a chart">
@@ -326,19 +334,14 @@
 
     <section class="live" id="live" aria-labelledby="live-title">
       <div class="live-bar">
-        <a class="example" id="example" href="https://x.com/taylor_">
-          <div class="ex-who"><img id="ex-avatar" alt=""><b id="ex-name">taylor</b><span id="ex-handle">@taylor_</span></div>
-          <pre class="ex-bio" id="ex-bio">⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣿⣆⠀⠀⠀⢀⡀⠀⠀⠀⠀⠀⠀⠀
-⣷⣷⣶⣤⣤⣤⣤⣤⣾⣿⣿⣿⣦⣀⣠⣿⣿⣤⣴⣾⣿⣿⣶⣾
-21.49B tokens / 498 commits in 14D
-the line spikes when i'm close</pre>
-          <div class="ex-note">A real X bio, redrawn by this</div>
-        </a>
         <div class="live-copy">
           <h2 id="live-title">Keep your bio live</h2>
-          <p>This chart can redraw itself in your X bio twice a day. It runs from your own GitHub, with your own X keys.</p>
-          <button class="quiet" id="how" type="button" aria-expanded="false" aria-controls="how-steps"><span class="label">Show me how</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+          <p>Redraws twice a day from your own GitHub, like <span class="ex"><a id="example" href="https://x.com/taylor_">@taylor_'s</a><span class="ex-card" aria-hidden="true"><span class="ex-who"><img id="ex-avatar" alt=""><b id="ex-name">taylor</b><span id="ex-handle">@taylor_</span></span><span class="ex-bio" id="ex-bio">⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣿⣆⠀⠀⠀⢀⡀⠀⠀⠀⠀⠀⠀⠀
+⣷⣷⣶⣤⣤⣤⣤⣤⣾⣿⣿⣿⣦⣀⣠⣿⣿⣤⣴⣾⣿⣿⣶⣾
+21.49B tokens / 498 commits in 14D
+the line spikes when i'm close</span></span></span>.</p>
         </div>
+        <button class="quiet" id="how" type="button" aria-expanded="false" aria-controls="how-steps"><span class="label">Show me how</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
       </div>
       <div class="how" id="how-steps"><div><div class="how-body">
         <h3>On GitHub</h3>
@@ -370,7 +373,7 @@ the line spikes when i'm close</pre>
     </section>
   </main>
 
-  <footer>GitHub charts use public contribution graphs. Tokens come from <a href="https://tokenmaxxing.sh">tokenmaxxing</a>. Coin prices come from <a href="https://www.geckoterminal.com">GeckoTerminal</a>.</footer>
+  <footer>Charts use public data from GitHub, <a href="https://tokenmaxxing.sh">tokenmaxxing</a> and <a href="https://www.geckoterminal.com">GeckoTerminal</a>.</footer>
 </div>
 
 <script type="module">
@@ -533,9 +536,9 @@ function fit() {
   if (!data || data.src !== state.src) return ($("#fit").textContent = "");
   const { chars: n, weighted } = measure(fullText());
   $("#fit").textContent =
-    n > 160 ? (weighted > 280 ? "Too long for a bio or a post" : `Too long for a bio, fits a post · ${n} characters`)
-    : state.w > PHONE ? `Fits a bio, but wraps on phones past ${PHONE} wide · ${n} of 160`
-    : `Fits a bio on any screen · ${n} of 160 characters`;
+    n > 160 ? (weighted > 280 ? "Too long for a bio or a post" : `Too long for a bio, fits a post · ${n}`)
+    : state.w > PHONE ? `Fits, but wraps on phones · ${n} of 160`
+    : `Fits any bio · ${n} of 160`;
 }
 
 $("#avatar").addEventListener("load", (e) => {

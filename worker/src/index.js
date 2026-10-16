@@ -12,7 +12,7 @@
 import { github, tokens } from "../../public/lib/sources.js";
 
 export default {
-  async fetch(req, env) {
+  async fetch(req, env, ctx) {
     const url = new URL(req.url);
     const gh = url.pathname.match(/^\/api\/github\/([^/]+)$/);
     if (gh) {
@@ -31,7 +31,7 @@ export default {
       }
     }
     if (url.pathname.startsWith("/api/gt/")) return geckoTerminal(url, env);
-    if (url.pathname === "/api/example") return example();
+    if (url.pathname === "/api/example") return example(url, ctx);
     if (url.pathname.startsWith("/api/")) return json({ error: "Not found." }, 0, 404);
     return env.ASSETS.fetch(req);
   },
@@ -52,12 +52,16 @@ async function geckoTerminal(url, env) {
   return new Response(r.body, { status: r.status, headers: { "content-type": "application/json; charset=utf-8", "cache-control": r.ok ? `public, max-age=${ttl}` : "no-store" } });
 }
 
-// The proof under the tool: a real bio this repo keeps updated
-async function example() {
-  const r = await fetch("https://api.fxtwitter.com/taylor_", { headers: { "user-agent": "line-in-bio" }, cf: { cacheTtl: 1800, cacheEverything: true } }).catch(() => null);
+// The proof under the tool: a real bio this repo keeps updated.
+// fxtwitter sometimes says 404 for a real account, so only good answers are cached, and the last one stands in when it fails.
+async function example(url, ctx) {
+  const last = new Request(new URL("/api/example?last", url));
+  const r = await fetch("https://api.fxtwitter.com/taylor_", { headers: { "user-agent": "line-in-bio" }, cf: { cacheTtlByStatus: { "200-299": 1800, "300-599": 0 } } }).catch(() => null);
   const u = r?.ok ? (await r.json().catch(() => ({}))).user : null;
-  if (!u?.description) return json({ error: "Couldn't read the example.", upstream: r?.status ?? "no answer" }, 0, 502);
-  return json({ name: u.name, handle: u.screen_name, avatar: u.avatar_url?.replace("_normal", "_200x200"), bio: u.description, url: `https://x.com/${u.screen_name}` }, 1800);
+  if (!u?.description) return (await caches.default.match(last)) || json({ error: "Couldn't read the example.", upstream: r?.status ?? "no answer" }, 0, 502);
+  const body = { name: u.name, handle: u.screen_name, avatar: u.avatar_url?.replace("_normal", "_200x200"), bio: u.description, url: `https://x.com/${u.screen_name}` };
+  ctx.waitUntil(caches.default.put(last, json(body, 7 * 86400)));
+  return json(body, 1800);
 }
 
 const json = (body, maxAge, status = 200) =>
