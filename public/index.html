@@ -165,7 +165,7 @@
   .quiet:hover { background: var(--fill); }
   .quiet:active { transform: scale(0.96); }
 
-  footer { padding: 64px 0 calc(32px + env(safe-area-inset-bottom)); color: var(--ink-3); font: 500 12px/16px var(--mono); }
+  footer { padding: 64px 0 calc(32px + env(safe-area-inset-bottom)); color: var(--ink-3); font: 500 12px/16px var(--mono); text-align: center; }
   footer a { text-decoration-color: color-mix(in srgb, currentColor 35%, transparent); text-underline-offset: 3px; }
 
   /* keep it live: a bar with a real bio it keeps updated, and the steps folded inside */
@@ -225,7 +225,6 @@
   <header class="top">
     <a class="logo" href="/"><b aria-hidden="true">⣰⣷</b>line in bio</a>
     <nav class="utils">
-      <a class="ghost" href="#live">Keep it live</a>
       <a class="ghost icon" href="https://github.com/gtmcknight/line-in-bio" aria-label="Source on GitHub"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
       <button class="ghost icon" id="theme" type="button" aria-label="Day mode"></button>
     </nav>
@@ -255,8 +254,7 @@
           </div>
           <div class="actions">
             <button class="copy" id="copy" type="button" disabled></button>
-            <a class="quiet" href="#live">Auto-update</a>
-          </div>
+            </div>
           <pre class="bio" id="bio" aria-hidden="true"></pre>
           <p class="stat" id="stat" role="status"></p>
           <p class="sr" id="summary"></p>
@@ -663,7 +661,7 @@ fetch("/api/example").then((r) => (r.ok ? r.json() : null)).then((u) => {
   if (u.avatar) $("#ex-avatar").src = u.avatar;
 }).catch(() => {});
 
-// Auto-update and the header link open the steps, scroll down, then ring the config so it's clear where they went
+// The L key opens the steps, scrolls down, then rings the config so it's clear where it went
 function showLive(e) {
   e?.preventDefault();
   setHow(true);
@@ -671,7 +669,6 @@ function showLive(e) {
   const box = $(".config");
   setTimeout(() => { box.classList.remove("flash"); box.offsetWidth; box.classList.add("flash"); }, reduced.matches ? 0 : 520);
 }
-document.querySelectorAll('a[href="#live"]').forEach((a) => a.addEventListener("click", showLive));
 $("#copy-config").addEventListener("click", async (e) => {
   const b = e.currentTarget;
   try { await navigator.clipboard.writeText(configText()); b.textContent = "Copied"; } catch { b.textContent = "Select and copy"; }
