@@ -7,8 +7,11 @@
   "width": 24,
   "rows": 2,
   "smooth": true,
-  "caption": "",
-  "link": true,
+  "bio": [
+    "{chart}",
+    "{stat}",
+    "{link}"
+  ],
   "stamp": true,
   "timezone": "America/New_York"
 }

@@ -34,10 +34,19 @@ if (config.stamp) {
   lines[0] += ` ${p.month}/${p.day} ${p.hour % 12 || 12}${p.hour < 12 ? "am" : "pm"}`;
 }
 
-const bio = [...lines, stat, config.link === false ? "" : link, config.caption].filter(Boolean).join("\n");
+// The bio, line by line: {chart}, {stat} and {link} are filled in, and every other line is your own words.
+// Configs from before "bio" used "caption" and "link"; they still work.
+const template = config.bio ?? ["{chart}", "{stat}", config.link === false ? "" : "{link}", config.caption ?? ""].filter(Boolean);
+if (!Array.isArray(template) || template.some((l) => typeof l !== "string")) stop('"bio" should be a list of lines, like ["{chart}", "{stat}", "{link}"].');
+const parts = { "{chart}": lines.join("\n"), "{stat}": stat, "{link}": link };
+const bio = template
+  .map((line) => ({ line, out: line.replace(/\{(chart|stat|link)\}/g, (m) => parts[m]) }))
+  .filter(({ line, out }) => out.trim() || !line.trim()) // {link} with nothing to link (your own numbers) leaves no blank line
+  .map(({ out }) => out)
+  .join("\n");
 const length = [...bio].length;
 console.log(`${bio}\n\n${length} of 160 characters`);
-if (length > 160) stop("Too long for an X bio. Lower width or rows in config.json, or set link to false.");
+if (length > 160) stop('Too long for an X bio. Lower width or rows, or cut a line from "bio", in config.json.');
 if (!live) process.exit(0);
 
 const keys = ["X_API_KEY", "X_API_SECRET", "X_ACCESS_TOKEN", "X_ACCESS_SECRET"].map((k) => process.env[k]);

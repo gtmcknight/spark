@@ -34,8 +34,7 @@ X bills each update to your developer account. Twice a day costs a few cents. Gi
 | `width` | Characters across, 6 to 48. Past 33, the chart wraps on phones. |
 | `rows` | Lines tall, 1 to 4. Blocks are always one line. |
 | `smooth` | `true` blends neighbouring days into a curve. `false` keeps every day (or price) as its own sharp bar. |
-| `caption` | An extra line under the stats, in your words. Leave it empty for none. |
-| `link` | Adds a line linking to the source: `github.com/you`, your tokenmaxxing page, or the coin's GeckoTerminal page. Numbers don't get one. |
+| `bio` | Your bio, one line per item. `{chart}` is the chart, `{stat}` its numbers line, and `{link}` a link to the source (`github.com/you`, your tokenmaxxing page, or the coin's GeckoTerminal page). Add your own lines above or below, put two on one line like `"{stat} · {link}"`, or delete one to drop it. |
 | `stamp` | Adds the update time after the chart's top line, so people can see it's live. |
 | `timezone` | The timezone for the stamp, like `America/New_York`. |
 

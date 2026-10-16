@@ -222,6 +222,7 @@
   .secret:active { transform: scale(0.97); }
   .steps .aside { margin-top: 10px; color: var(--ink-3); font-size: 14px; line-height: 20px; }
   .steps .aside a { color: var(--ink-2); }
+  .steps .aside code { color: var(--ink-2); font-size: 13px; line-height: 20px; }
   .steps code { font: 500 14px/24px var(--mono); }
   .steps a { text-decoration-color: color-mix(in srgb, currentColor 35%, transparent); text-underline-offset: 3px; }
   .config { position: relative; margin-top: 12px; }
@@ -350,7 +351,8 @@ the line spikes when i'm close</span></span></span>.</p>
           <li><span><a href="https://github.com/gtmcknight/spark/fork">Fork gtmcknight/spark</a>. In your fork, open <b>Actions</b> and click <b>I understand my workflows, go ahead and enable them</b>.</span>
             <span class="aside"><a href="https://github.com/gtmcknight/spark">The code</a> is open: your X keys stay in your fork, and only <a href="https://github.com/gtmcknight/spark/blob/main/bio.mjs">bio.mjs</a> uses them, to update your bio.</span></li>
           <li><span>Open <code>config.json</code> in your fork, click the pencil, replace everything with this, and commit. It draws the chart above.</span>
-            <div class="config"><pre id="config"></pre><button class="quiet" id="copy-config" type="button">Copy</button></div></li>
+            <div class="config"><pre id="config"></pre><button class="quiet" id="copy-config" type="button">Copy</button></div>
+            <span class="aside">Your own words go in <code>bio</code>: add lines above or below <code>{chart}</code>, or delete <code>{stat}</code> or <code>{link}</code> to drop it.</span></li>
           <li><span>Go to <b>Settings → Secrets and variables → Actions</b> and leave the tab open. Your X keys go here.</span></li>
         </ol>
         <h3>On X</h3>
@@ -431,7 +433,8 @@ function configText() {
     coin: state.src === "coin" ? state.q.coin.trim() : "",
     numbers: state.src === "numbers" && data?.src === "numbers" ? data.values : [],
     range: state.range, style: state.style, width: state.w, rows: state.rows, smooth: state.smooth,
-    caption: "", link: true, stamp: true, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC",
+    bio: ["{chart}", "{stat}", ...(state.src === "numbers" ? [] : ["{link}"])], // your own lines go above or below {chart}
+    stamp: true, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC",
   }, null, 2);
 }
 
