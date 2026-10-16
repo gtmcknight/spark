@@ -14,9 +14,9 @@ Each chart character is a braille pattern: a 2 by 4 grid of dots, so a line of t
 ## Keep your bio live
 
 1. **Fork this repo.** In your fork, open the Actions tab and turn workflows on. GitHub leaves them off in new forks.
-2. **Make an X app.** In the [X Developer Console](https://console.x.com), create an app and set its user authentication to **Read and write**. Generate its API key and secret, then an access token and secret for your account.
-3. **Add the four keys to your fork.** Settings → Secrets and variables → Actions → New repository secret, once for each: `X_API_KEY`, `X_API_SECRET`, `X_ACCESS_TOKEN`, `X_ACCESS_SECRET`.
-4. **Edit `config.json`.** Put your GitHub handle in `github`, or a coin's ticker or address in `coin`.
+2. **Edit `config.json`.** Put your GitHub handle in `github`, or a coin's ticker or address in `coin`. [spark.rhps.fun](https://spark.rhps.fun) writes one for you.
+3. **Open your fork's secrets.** Settings → Secrets and variables → Actions. Leave the tab open for the next step.
+4. **Make an X app and add its keys.** In the [X Developer Console](https://console.x.com), create an app and set its user authentication to **Read and write**. Generate its API key and secret, then an access token and secret for your account. X shows each secret once, so add each as a New repository secret as it appears: `X_API_KEY`, `X_API_SECRET`, `X_ACCESS_TOKEN`, `X_ACCESS_SECRET`.
 5. **Run it once.** Actions → Update bio → Run workflow. After that it runs twice a day.
 
 X bills each update to your developer account. Twice a day costs a few cents. GitHub pauses scheduled workflows in a repo with no activity for 60 days; turn it back on from the Actions tab.

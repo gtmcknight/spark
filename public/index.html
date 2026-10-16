@@ -201,8 +201,8 @@
   .how { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s var(--ease); }
   .how.open { grid-template-rows: 1fr; }
   .how > div { overflow: hidden; }
-  .how-body { padding: 4px 20px 20px; border-top: 1px solid var(--rule); }
-  .steps { margin: 20px 0 0; padding: 0; list-style: none; counter-reset: step; display: grid; gap: 14px; }
+  .how-body { padding: 4px 20px 20px; border-top: 1px solid var(--rule); counter-reset: step; } /* numbered straight through all three groups */
+  .steps { margin: 20px 0 0; padding: 0; list-style: none; display: grid; gap: 14px; }
   .steps li { counter-increment: step; display: grid; grid-template-columns: 28px minmax(0, 1fr); font-size: 16px; line-height: 24px; }
   .steps li::before { content: counter(step); grid-row: span 2; color: var(--ink-3); font: 500 12px/24px var(--mono); }
   .steps li > * { grid-column: 2; }
@@ -341,25 +341,28 @@ the line spikes when i'm close</pre>
         </div>
       </div>
       <div class="how" id="how-steps"><div><div class="how-body">
+        <h3>On GitHub</h3>
+        <ol class="steps">
+          <li><span><a href="https://github.com/gtmcknight/line-in-bio/fork">Fork gtmcknight/line-in-bio</a>. In your fork, open <b>Actions</b> and click <b>I understand my workflows, go ahead and enable them</b>.</span></li>
+          <li><span>Open <code>config.json</code> in your fork, click the pencil, replace everything with this, and commit. It draws the chart above.</span>
+            <div class="config"><pre id="config"></pre><button class="quiet" id="copy-config" type="button">Copy</button></div></li>
+          <li><span>Go to <b>Settings → Secrets and variables → Actions</b> and leave the tab open. Your X keys go here.</span></li>
+        </ol>
         <h3>On X</h3>
         <ol class="steps">
           <li><span>Open the <a href="https://console.x.com">X Developer Console</a> and create an app.</span></li>
           <li><span>In the app, open <b>User authentication settings</b>. Set permissions to <b>Read and write</b>, type to <b>Web App, Automated App or Bot</b>, and put <code>https://spark.rhps.fun</code> in both Callback URI and Website URL. Save.</span></li>
-          <li><span>Open <b>Keys and tokens</b>. Under <b>OAuth 1.0 Keys</b>, regenerate the Consumer Key, then generate the Access Token. Each shows its secret once, so keep the tab open.</span>
+          <li><span>Open <b>Keys and tokens</b>. Under <b>OAuth 1.0 Keys</b>, regenerate the Consumer Key, then generate the Access Token. X shows each secret only once, so add each to GitHub as it appears: <b>New repository secret</b>, named as in the table.</span>
             <div class="keys-map" role="table" aria-label="Which X key goes in which secret">
               <div role="row"><button type="button" class="secret" role="cell">X_API_KEY</button><span role="cell">Consumer Key, the key</span></div>
               <div role="row"><button type="button" class="secret" role="cell">X_API_SECRET</button><span role="cell">Consumer Key, the secret</span></div>
               <div role="row"><button type="button" class="secret" role="cell">X_ACCESS_TOKEN</button><span role="cell">Access Token, the token</span></div>
               <div role="row"><button type="button" class="secret" role="cell">X_ACCESS_SECRET</button><span role="cell">Access Token, the secret</span></div>
             </div>
-            <span class="aside">Skip OAuth 2.0 (Client ID and Client Secret); this doesn't use them. The Access Token should say <b>Read and write</b>. If it says Read, you made it before step 2, so regenerate it.</span></li>
+            <span class="aside">Skip OAuth 2.0 (Client ID and Client Secret); this doesn't use them. The Access Token should say <b>Read and write</b>. If it says Read, you made it before step 5, so regenerate it.</span></li>
         </ol>
-        <h3>On GitHub</h3>
+        <h3>Back on GitHub</h3>
         <ol class="steps">
-          <li><span><a href="https://github.com/gtmcknight/line-in-bio/fork">Fork gtmcknight/line-in-bio</a>. In your fork, open <b>Actions</b> and click <b>I understand my workflows, go ahead and enable them</b>.</span></li>
-          <li><span>In your fork, go to <b>Settings → Secrets and variables → Actions → New repository secret</b> and add all four, named exactly as in the table.</span></li>
-          <li><span>Open <code>config.json</code> in your fork, click the pencil, replace everything with this, and commit. It draws the chart above.</span>
-            <div class="config"><pre id="config"></pre><button class="quiet" id="copy-config" type="button">Copy</button></div></li>
           <li><span>Go to <b>Actions → Update bio → Run workflow</b>. Your bio changes within a minute, then twice a day.</span></li>
         </ol>
         <p class="fine">X bills each update to your developer account, so keep a little credit under Billing. Twice a day costs a few cents.</p>
