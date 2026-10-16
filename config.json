@@ -1,0 +1,12 @@
+{
+  "github": "",
+  "coin": "",
+  "range": "",
+  "style": "bars",
+  "width": 24,
+  "rows": 2,
+  "smooth": true,
+  "caption": "",
+  "stamp": true,
+  "timezone": "America/New_York"
+}

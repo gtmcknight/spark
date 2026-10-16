@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "line-in-bio",
+  "main": "src/index.js",
+  "compatibility_date": "2026-09-01",
+  "observability": { "enabled": true },
+
+  // Every path that is not /api serves the one page; it reads the handle or coin from the URL.
+  "assets": { "directory": "../public", "binding": "ASSETS", "run_worker_first": ["/api/*"], "not_found_handling": "single-page-application" },
+
+  "workers_dev": true,
+  "routes": [{ "pattern": "spark.rhps.fun", "custom_domain": true }]
+}

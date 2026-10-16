@@ -1,0 +1,25 @@
+name: Update bio
+
+on:
+  schedule:
+    - cron: "17 3,15 * * *" # twice a day, in UTC; GitHub can start these a few minutes late
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bio:
+    if: github.repository != 'gtmcknight/line-in-bio' # runs in forks, not here
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node bio.mjs --live
+        env:
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_SECRET: ${{ secrets.X_ACCESS_SECRET }}

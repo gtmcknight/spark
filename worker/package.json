@@ -1,0 +1,11 @@
+{
+  "name": "line-in-bio",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev --port 3510",
+    "tail": "wrangler tail"
+  },
+  "devDependencies": { "wrangler": "^4.42.0" }
+}
